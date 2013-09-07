@@ -18,48 +18,74 @@ function AnimationLibrary(canvas_id){
 }
 
 AnimationLibrary.prototype.addSquare = function(size,color,x,y){
-  var halfSize = size/2;
-  var currentX = x - halfSize;
-  var currentY = y - halfSize;
-  //the square is stored in memory to be drawn later on
+  
   var square = {
     size: size,
-    color:color,
-    x:x,
-    y:y,
-    points:[],
-    initialX:currentX,
-    initialY:currentY
+    color:color    
   }  
-  square.points.push({x:currentX+=size ,y:currentY});
-  square.points.push({x:currentX ,y:currentY+=size});
-  square.points.push({x:currentX-=size ,y:currentY});
-  square.points.push({x:currentX ,y:currentY-=size}); 
  
-  this.objectsToPaint.push(square)
+  square.setPosition = function(x,y){
+    this.x        = x;
+    this.y        = y;
+    this.initialX = x - this.size/2;
+    this.initialY = y - this.size/2;
+    this.points = [];
+    this.points.push({x:this.initialX+=this.size ,y:this.initialY});
+    this.points.push({x:this.initialX ,y:this.initialY+=this.size});
+    this.points.push({x:this.initialX-=this.size ,y:this.initialY});
+    this.points.push({x:this.initialX ,y:this.initialY-=this.size}); 
+  }
+
+  square.setPosition(x,y);
+  this.objectsToPaint.push(square);
   
 }
 
-AnimationLibrary.prototype.draw = function(){  
-  var i,coordinate;
-  var square = this.objectsToPaint[0];
-  
-  this.context.clearRect(0, 0, this.width, this.height);
+AnimationLibrary.prototype.drawObject = function(the_object) {
+  var i;
+
   this.context.beginPath();
-  this.context.moveTo(square.initialX,square.initialY);
+  this.context.moveTo(the_object.initialX,the_object.initialY);
   
-  for (i=0; i<square.points.length; i++) {
-    coordinate = square.points[i];
+  for (i=0; i<the_object.points.length; i++) {
+    coordinate = the_object.points[i];
     this.context.lineTo(coordinate.x,coordinate.y);
   }
     
   this.context.closePath();
 
-  this.context.fillStyle = square.color;
+  this.context.fillStyle = the_object.color;
   
   this.context.fill();
 }
 
-AnimationLibrary.animate = function(){
+AnimationLibrary.prototype.draw = function(){  
+  var i,coordinate;  
+  
+  this.context.clearRect(0, 0, this.width, this.height);
 
+  for (i=0; i<this.objectsToPaint.length; i++){
+    this.drawObject(this.objectsToPaint[i]);
+  }
+  
+}
+
+AnimationLibrary.prototype.animate = function(){
+  var that = this;
+  interval = setInterval(function(){
+    var speed1 = 10*Math.random() -5;
+    var speed2 = 10*Math.random() -5;
+    var speed3 = 10*Math.random() -5;
+    var speed4 = 10*Math.random() -5;
+
+    var square = that.objectsToPaint[0];
+    square.setPosition(square.x+speed1,square.y+speed2);
+
+
+    var square = that.objectsToPaint[1];
+    square.setPosition(square.x+speed4,square.y+speed3);
+
+
+    that.draw();
+  }, 1000/24);
 }
