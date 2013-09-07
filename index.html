@@ -1,0 +1,21 @@
+<html>
+	<head>
+		<script src="script.js"></script>
+		<style>
+			.the_canvas{  
+			  border: 1px solid #ddd;
+			}
+		</style>
+	</head>
+	<body>
+		<canvas id="the_canvas" width=700 height=500 class="the_canvas"></canvas>		
+	</body>
+</html>
+
+<script>
+(function() {
+	var painting = new AnimationLibrary("the_canvas");
+	painting.addSquare(50, "#89a02c", painting.centerX, painting.centerY);
+	painting.draw();
+})();
+</script>
