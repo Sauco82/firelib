@@ -61,9 +61,36 @@ function CanvasHelper(canvas_id){
     this.height = this.canvas.height;
     this.centerX = this.width/2;
     this.centerY = this.height/2;
+
+    this.elements = [];
+
+    this.working = false;
        
   }
   
+}
+
+CanvasHelper.prototype.start = function(){
+  this.working = true;
+  this.animate();
+}
+
+CanvasHelper.prototype.stop = function(){
+  this.working = false;
+}
+
+CanvasHelper.prototype.animate = function(){  
+  var i,that = this;  
+
+  this.context.clearRect(0, 0, this.width, this.height);
+
+  for (i=0; i<that.elements.length; i++){
+    that.elements[i].draw();    
+  }
+  
+  if (that.working) {
+    requestAnimationFrame(function(){that.animate();});
+  }
 }
 
 /** Fire **/
@@ -75,48 +102,28 @@ function Fire(width, height, myCanvas,x,y){
   this.width = width;
   this.height = height;
   this.myCanvas = myCanvas;
-  this.particles = [];
-  this.working = false;
+  this.particles = [];  
 
   this.left = x-width/2;
   this.right = x+width/2;
   this.bottom = y;
   this.top = y-height;
-  
-}
 
-Fire.prototype.start = function(){
-
-  this.working = true;
-
-  this.particles = [];
   for (i = 0; i < 70; i++) {
     particle = new FireParticle(15, GREEN, this.x, this.y);
     this.particles.push(particle);
   };
-  this.animate();
-}
-
-Fire.prototype.stop = function(){
-  this.working = false;
-}
-
-
-
-Fire.prototype.animate = function(){  
-  var i,coordinate,that = this;  
-
-  this.myCanvas.context.clearRect(0, 0, this.myCanvas.width, this.myCanvas.height);
-
-  for (i=0; i<that.particles.length; i++){
-    that.particles[i].draw(that.myCanvas.context);
-  }
-
-  that.move();
   
-  if (this.working) {
-    requestAnimationFrame(function(){that.animate();});
+}
+
+Fire.prototype.draw = function(){  
+  var i,coordinate;    
+
+  for (i=0; i<this.particles.length; i++){
+    this.particles[i].draw(this.myCanvas.context);
   }
+
+  this.move();  
 }
 
 Fire.prototype.move = function(){
@@ -125,7 +132,7 @@ Fire.prototype.move = function(){
   for (i=0; i<this.particles.length; i++){
 
     if (this.particles[i].inBoundaries(this.left, this.right, this.bottom, this.top)){
-      xIncrement = 10*Math.random() - 5;
+      xIncrement = 14*Math.random() - 7;
       yIncrement = -10*Math.random();
       this.particles[i].x += xIncrement;
       this.particles[i].y += yIncrement;
@@ -137,7 +144,6 @@ Fire.prototype.move = function(){
 
   }
 }
-
 
 /** Fire Particle **/
 function FireParticle(size,hsla,x,y){

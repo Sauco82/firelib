@@ -15,5 +15,12 @@
 <script>
 	var cnvs = new CanvasHelper("the_canvas"),
 		fire = new Fire(100, 300, cnvs, cnvs.centerX, cnvs.height);
-		fire.start()
+		cnvs.elements.push(fire);
+		fire = new Fire(200, 100, cnvs, 50, cnvs.height);
+		cnvs.elements.push(fire);
+		fire = new Fire(100, 100, cnvs, cnvs.width-100, cnvs.height);
+		cnvs.elements.push(fire);
+		fire = new Fire(100, 250, cnvs, 300, cnvs.height);
+		cnvs.elements.push(fire);
+		cnvs.start();
 </script>
