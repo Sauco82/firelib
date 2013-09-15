@@ -13,8 +13,7 @@
 </html>
 
 <script>
-(function() {	
-	var fire = new Fire("the_canvas", 100, 300);
-	fire.start();
-})();
+	var cnvs = new CanvasHelper("the_canvas"),
+		fire = new Fire(100, 300, cnvs, cnvs.centerX, cnvs.height);
+		fire.start()
 </script>
